@@ -11,4 +11,9 @@
     <string name="lable_1">+1 point</string>
     <string name="reset_value">reset</string>
 
+    <string name="input_hint">Input RMB: </string>
+    <string name="click">click to convert</string>
+    <string name="euro">to EURO</string>
+    <string name="won">to WON</string>
+    <string name="dollar">to Dollar</string>
 </resources>
