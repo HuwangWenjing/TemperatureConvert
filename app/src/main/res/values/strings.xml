@@ -5,6 +5,7 @@
     <string name="button">button</string>
     <string name="teamName">TeamA</string>
     <string name="score">0</string>
+    <string name="scoreB">0</string>
     <string name="lable_3">+3 points</string>
     <string name="lable_2">+2 points</string>
     <string name="lable_1">+1 point</string>
