@@ -16,4 +16,6 @@
     <string name="euro">to EURO</string>
     <string name="won">to WON</string>
     <string name="dollar">to Dollar</string>
+    <string name="save">save</string>
+    <string name="setting">setting</string>
 </resources>
