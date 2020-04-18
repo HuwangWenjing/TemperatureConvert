@@ -1,16 +1,18 @@
 package com.example.temperatureconvert;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
 public class ScoreActivity extends AppCompatActivity {
 
     TextView score;
     TextView scoreB;
+    String TAG = "show";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -18,6 +20,27 @@ public class ScoreActivity extends AppCompatActivity {
 
         score = (TextView) findViewById(R.id.scoreA);
         scoreB = (TextView)findViewById(R.id.scoreB);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        String scoreA = ((TextView)findViewById(R.id.scoreA)).getText().toString();
+        String scoreB = ((TextView)findViewById(R.id.scoreB)).getText().toString();
+
+        outState.putString("teama_score", scoreA);
+        outState.putString("teamb_score", scoreB);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        String scorea = savedInstanceState.getString("teama_score");
+        String scoreb = savedInstanceState.getString("teamb_score");
+
+        Log.i(TAG, "onRestoreInstanceState: ");
+        ((TextView)findViewById(R.id.scoreA)).setText(scorea);
+        ((TextView)findViewById(R.id.scoreA)).setText(scoreb);
     }
 
     public void btnAdd1(View btn) {
