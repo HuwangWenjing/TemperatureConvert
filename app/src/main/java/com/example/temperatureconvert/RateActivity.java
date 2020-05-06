@@ -1,8 +1,6 @@
 package com.example.temperatureconvert;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -22,9 +20,6 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
 
 public class RateActivity extends AppCompatActivity implements Runnable {
 
@@ -45,19 +40,20 @@ public class RateActivity extends AppCompatActivity implements Runnable {
         show = (TextView) findViewById(R.id.showText);
 
         //获得在sharedpreferences里保存的数据
-        SharedPreferences sharedPreferences = getSharedPreferences("myrate", Activity.MODE_PRIVATE); //通常情况下都把配置文件做成私有的
+        //SharedPreferences sharedPreferences = getSharedPreferences("myrate", Activity.MODE_PRIVATE); //通常情况下都把配置文件做成私有的
         //SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this); //另一获取文件的方式，高版本可用；本方式只能获取一个配置文件
-        dollarRate = sharedPreferences.getFloat("dollar_rate", 0.0f);
-        euroRate = sharedPreferences.getFloat("euro_rate", 0.0f);
-        wonRate = sharedPreferences.getFloat("won_rate", 0.0f);
 
-        Log.i(TAG, "onCreate: sp dollarRate=" + dollarRate);
-        Log.i(TAG, "onCreate: sp euroRate=" + euroRate);
-        Log.i(TAG, "onCreate: sp wonRate=" + wonRate);
+//        Log.i(TAG, "onCreate: sp dollarRate=" + dollarRate);
+//        Log.i(TAG, "onCreate: sp euroRate=" + euroRate);
+//        Log.i(TAG, "onCreate: sp wonRate=" + wonRate);
 
         //开启子线程
-        Thread t = new Thread(this);
-        t.start(); //开启子线程之后调用run（）方法
+        int count = 0;
+        while(count == 0){
+            Thread t = new Thread(this);
+            t.start(); //开启子线程之后调用run（）方法
+            count += 1;
+        }
 
         handler = new Handler() {
             @Override
@@ -65,7 +61,7 @@ public class RateActivity extends AppCompatActivity implements Runnable {
                 if (msg.what == 5) {
                     Bundle bdl = (Bundle) msg.obj;
                     dollarRate = bdl.getFloat("dollar-rate");
-                    euroRate = bdl.getFloat("euor-rate");
+                    euroRate = bdl.getFloat("euro-rate");
                     wonRate = bdl.getFloat("won-rate");
 
                     Log.i(TAG, "handleMessage: dollarRate" + dollarRate);
@@ -142,34 +138,29 @@ public class RateActivity extends AppCompatActivity implements Runnable {
             Log.i(TAG, "onActivityResult: wonRate=" + wonRate);
 
             //将新设置的汇率写入SP
-            SharedPreferences sharedPreferences = getSharedPreferences("myrate", Activity.MODE_PRIVATE);
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putFloat("dollar_rate", dollarRate);
-            editor.putFloat("euro_rate", euroRate);
-            editor.putFloat("won_rate", wonRate);
-            editor.commit();
-            Log.i(TAG, "onActivityResult: 数据已保存到SharedPreferences");
+//            SharedPreferences sharedPreferences = getSharedPreferences("myrate", Activity.MODE_PRIVATE);
+//            SharedPreferences.Editor editor = sharedPreferences.edit();
+//            editor.putFloat("dollar_rate", dollarRate);
+//            editor.putFloat("euro_rate", euroRate);
+//            editor.putFloat("won_rate", wonRate);
+//            editor.commit();
+//            Log.i(TAG, "onActivityResult: 数据已保存到SharedPreferences");
         }
     }
 
     @Override
     public void run() {
         Log.i(TAG, "run: run()...");
-        for (int i = 1; i < 6; i++) {
-            Log.i(TAG, "run: i = " + i);
-            try {
-                Thread.sleep(200);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-
+//        for (int i = 1; i < 6; i++) {
+//            Log.i(TAG, "run: i = " + i);
+//            try {
+//                Thread.sleep(200);
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
+//        }
         //用于保存获取的汇率
         Bundle bundle = new Bundle();
-
-
-
-
         //获取网络数据
 //        URL url = null;
 //        try{
@@ -185,21 +176,15 @@ public class RateActivity extends AppCompatActivity implements Runnable {
 //        }catch(IOException e){
 //            e.printStackTrace();
 //        }
-
         Document doc = null;
         try{
-            doc = Jsoup.connect("https://www.boc.cn/sourcedb/whpj/").get();
+            doc = Jsoup.connect("http://www.usd-cny.com/").get();
             //doc = Jsoup.parse(html);
             Log.i(TAG, "run: "+ doc.title());
             Elements tables = doc.getElementsByTag("table");
-            //int i = 1;
-//            for(Element table : tables) {
-//                Log.i(TAG, "run: table["+i+"]" + table);
-//                i++;
-//            }
 
-            Element table4 = tables.get(3);
-            Log.i(TAG, "run: tables4 = " + table4);
+            Element table4 = tables.get(0);
+            //Log.i(TAG, "run: tables4 = " + table4);
 
             //获取TD中的数据
             Elements tds = table4.getElementsByTag("td");
@@ -218,7 +203,6 @@ public class RateActivity extends AppCompatActivity implements Runnable {
                     bundle.putFloat("won-rate", Float.parseFloat(val));
                 }
             }
-
         }catch (IOException e) {
             e.printStackTrace();
         }
@@ -234,17 +218,27 @@ public class RateActivity extends AppCompatActivity implements Runnable {
 
     }
 
-    private String inputStream2String(InputStream inputStream) throws IOException {
-        final int bufferSize = 1024;
-        final char[] buffer = new char[bufferSize];
-        final StringBuilder out = new StringBuilder();
-        Reader in = new InputStreamReader(inputStream, "UTF-8");
-        for( ; ; ) {
-            int rsz = in.read(buffer,0,buffer.length);
-            if( rsz < 0)
-                break;
-            out.append(buffer, 0, rsz);
+
+
+//    private String inputStream2String(InputStream inputStream) throws IOException {
+//        final int bufferSize = 1024;
+//        final char[] buffer = new char[bufferSize];
+//        final StringBuilder out = new StringBuilder();
+//        Reader in = new InputStreamReader(inputStream, "UTF-8");
+//        for( ; ; ) {
+//            int rsz = in.read(buffer,0,buffer.length);
+//            if( rsz < 0)
+//                break;
+//            out.append(buffer, 0, rsz);
+//        }
+//        return out.toString();
+//    }
+
+    public void count() {
+        int count = 0;
+        while(count == 0) {
+
         }
-        return out.toString();
     }
+
 }
