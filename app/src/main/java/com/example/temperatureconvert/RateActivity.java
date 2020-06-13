@@ -218,8 +218,6 @@ public class RateActivity extends AppCompatActivity implements Runnable {
 
     }
 
-
-
 //    private String inputStream2String(InputStream inputStream) throws IOException {
 //        final int bufferSize = 1024;
 //        final char[] buffer = new char[bufferSize];
